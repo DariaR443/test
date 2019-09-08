@@ -1,0 +1,199 @@
+
+SELECT a.snm, SUM(l.count) AS SUM 
+    FROM locate AS l, author AS a
+    WHERE a.id = l.id_author  
+    GROUP BY a.snm
+    
+    SELECT a.snm FROM author AS a 
+WHERE a.id  IN (SELECT l.id_author FROM locate AS l
+        GROUP BY l.id_author 
+        HAVING SUM(l.count) = (SELECT MAX(t_sum.sum) AS MAX 
+                    FROM (SELECT a.snm, SUM(l.count) AS SUM 
+                    FROM locate AS l, author AS a 
+                    WHERE a.id  = l.id_author 
+                    GROUP BY a.snm) AS t_sum)
+        )
+ <?php
+
+ 
+
+class WBMain
+
+{
+
+    public static $signalsBind = array();
+
+    public static $components = array();
+
+ 
+
+    public static function main()
+
+    {
+
+        wb_init();
+
+        include "res:///PHP/MAINFORMFORM";
+
+ 
+
+        self::$signalsBind =
+
+           array
+
+           (
+
+               IDCLOSE => 'close'
+
+           ,   IDC_PUSHBUTTON1004 => 'pushButton1'
+
+           ,   IDC_PUSHBUTTON1005 => 'pushButton2'
+
+           );
+
+ 
+
+        wb_set_handler($winmain, 'WBMain::callSignalHandler');
+
+        wb_main_loop();
+
+    }
+
+ 
+
+    public static function ?
+
+           callSignalHandler($Window, $signal)
+
+    {
+
+        if (isset(self::$signalsBind[$signal]) && is_callable($foo = 'WBMain::signal_' . self::$signalsBind[$signal]))
+
+           call_user_func($foo, $Window);
+
+    }
+
+ 
+
+    public static function signal_pushButton1($Window)
+
+    {
+public static function signal_pushButton1($Window)
+
+{
+
+preg_match
+
+(
+
+wb_get_text(self::$components[IDC_RTFEDITBOX1002]),
+
+wb_get_text(self::$components[IDC_RTFEDITBOX1001]),
+
+$arrayResults
+
+);
+
+ 
+
+self::setResult($arrayResults);
+
+}
+
+
+public static function signal_pushButton2($Window)
+
+{
+
+preg_match_all
+
+(
+
+wb_get_text(self::$components[IDC_RTFEDITBOX1002]),
+
+wb_get_text(self::$components[IDC_RTFEDITBOX1001]),
+
+$arrayResults
+
+);
+
+ 
+
+self::setResult($arrayResults);
+
+}
+        wb_message_box($Window, __METHOD__, '');
+
+    }
+
+ 
+
+    public static function signal_pushButton2($Window)
+
+    {
+
+        wb_message_box($Window, __METHOD__, '');
+
+    }
+
+ 
+
+    public static function signal_close($Window)
+
+    {
+
+        wb_destroy_window($Window);
+
+    }
+
+public static function setResult(array $arrayResults)
+
+{
+
+$result =
+
+'<html><head><title>PCRETester</title></head><body>'
+
+. highlight_string
+
+(
+
+"<?php\n\n"
+
+. var_export($arrayResults,true)
+
+,true
+
+)
+
+. '</body></html>'
+
+;
+
+ 
+
+static $file;
+
+if (!$file) $file = getcwd() . '/render.tmp';
+
+ 
+
+$fp = fopen($file,'w+');
+
+fwrite($fp, $result);
+
+fclose($fp);
+
+ 
+
+wb_set_location(self::$components[IDC_HTMLCONTROL1003], $file);
+
+} 
+
+ 
+
+WBMain::main();
+
+ 
+
+?>
