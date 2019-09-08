@@ -1,41 +1,40 @@
 <?php 
 session_start();
 $hostname = "localhost";
-$dbName = "lab1";
-$userstable = "phonelib";
+$dbName = "lib1";
+$userstable = "lib";
 mysql_connect($hostname,$username,$password) OR DIE("Немогу создать соединение ");
 mysql_select_db($dbName) or die(mysql_error());
 $message = '';
 if (isset ($_POST['add'])){
-        $_SESSION['mess'] = "Выполнен запрос: Добавить ".$_POST['my_name']."
-        ".$_POST['my_data']."<BR><BR>";
-        $sql = mysql_query("INSERT into phonelib(FIO,bdate)
-        values ('".$_POST['my_name']."', '".$_POST['my_data']."');");
+        $_SESSION['mess'] = "Выполнен запрос: Добавить ".$_POST['author']."
+        ".$_POST['my_data'].;
+        $sql = mysql_query("INSERT into lib(author,genre)
+        values ('".$_POST['author']."', '".$_POST['genre']."');");
        
 }
 if (isset($_GET['del'])){
-        $_SESSION['mess']= "Выполнен запрос: Удалить ".$_GET['del']." запись<BR>";
-        $sql = mysql_query("DELETE from phonelib where ID=".$_GET['del']);
-  
+        $_SESSION['mess']= "Выполнен запрос: Удалить ".$_GET['del'];
+        $sql = mysql_query("DELETE from lib where book=".$_GET['del']);
+        $sql = mysql_query("DELETE from lib where author=".$_GET['del']);
+        $sql = mysql_query("DELETE from lib where genre=".$_GET['del']);
 }
 if (isset($_GET['edit'])){
-        $sql = "select * from phonelib where ID =".$_GET['edit'];
+        $sql = "select * from lib where book =".$_GET['edit'];
         $r = mysql_query($sql) OR DIE ("Не могу выполнить запрос");
         $res=mysql_fetch_array($r);
-        $_SESSION['mess']= "Выполнен запрос: Изменить ".$res['ID']. " на
-                                        ".$res['FIO']." ".$res['bdate'];
+        $_SESSION['mess']= "Выполнен запрос: Изменить ".$res['book']. " на
+                                        ".$res['author']." ".$res['genre'];
 }
 if(isset($_POST['update'])){
-        $sql = "UPDATE phonelib SET FIO='".$_POST['my_name']."',
-        bdate='".$_POST['my_data']."' where ID=".$_POST['my_id'];
+        $sql = "UPDATE lib SET FIO='".$_POST['book']."',
+        genre='".$_POST['author']."' where book=".$_POST['my_book'];
         mysql_query($sql) OR DIE ("Не могу выполнить запрос");
-        $_SESSION['mess']= "Выполнен запрос: Изменить ".$_POST['my_id']. " на
-                                        ".$_POST['my_name']." ".$_POST['my_data'];
-        header('location:phlib.php');
+        $_SESSION['mess']= "Выполнен запрос: Изменить ".$_POST['book']. " на
+                                        ".$_POST['author']." ".$_POST['genre'];
+     
 }
  $query = "SELECT * FROM $locate AS l, author AS a";
- SELECT a.snm, SUM(l.count) AS SUM 
-    FROM locate AS l, author AS a
     WHERE a.id = l.id_author  
     GROUP BY a.snm
  $result=mysql_query($query) or die(mysql_error());
@@ -43,15 +42,9 @@ if(isset($_POST['update'])){
  while($row=mysql_fetch_array($result)){
         $data[] = $row;
  }
-?>
 
-SELECT a.snm, SUM(l.count) AS SUM 
-    FROM locate AS l, author AS a
-    WHERE a.id = l.id_author  
-    GROUP BY a.snm
-    
-    SELECT a.snm FROM author AS a 
-WHERE a.id  IN (SELECT l.id_author FROM locate AS l
+ $query = "SELECT a.snm * FROM $author AS a "; 
+ WHERE a.id  IN (SELECT l.id_author FROM locate AS l
         GROUP BY l.id_author 
         HAVING SUM(l.count) = (SELECT MAX(t_sum.sum) AS MAX 
                     FROM (SELECT a.snm, SUM(l.count) AS SUM 
@@ -59,8 +52,9 @@ WHERE a.id  IN (SELECT l.id_author FROM locate AS l
                     WHERE a.id  = l.id_author 
                     GROUP BY a.snm) AS t_sum)
         )
- <?php
+?>
 
+ <?php
 
 class WBMain
 
